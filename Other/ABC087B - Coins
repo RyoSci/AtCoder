@@ -1,0 +1,16 @@
+five,one,fifty=[int(input()) for i in range(3)] 
+money=int(input())
+counter=0
+
+for i in range(five+1):
+  if i*500>money:
+    break
+  for j in range(one+1):
+    if j*100>money:
+      break
+    for k in range(fifty+1):
+      if k*50>money:
+        break
+      if 500*i+100*j+50*k==money:
+        counter+=1
+print(counter)
