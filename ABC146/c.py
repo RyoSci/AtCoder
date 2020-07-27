@@ -13,11 +13,15 @@ else:
                 i_res = i
                 n = (10 ** i) * j 
                 # res = n
-                print(a * (10 ** i) * j + b * (i + 1) , i, j)
+                # print(a * (10 ** i) * j + b * (i) , i, j, n)
+                break 
+            # breakを書かないことで10**8が候補に入ってしまっていた。足算すると、10**9になるが、i_resが本来の10より小さいので不適になっていた。
             else:
                 if not is_first:
                     if a * (n + (10 ** i) * j) + b * (i_res + 1) <= x:
                         n += (10 ** i) * j
+                        # print(n, i, j)
                         # res = n
-        print(n)
+                        break
+        # print(n)
     print(n)
