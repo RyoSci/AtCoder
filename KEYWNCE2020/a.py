@@ -1,0 +1,5 @@
+h = int(input())
+w = int(input())
+n = int(input())
+res = min((n + h - 1) // h, (n + w - 1) // w)
+print(res)
