@@ -24,4 +24,4 @@ ans = 0
 for i in range(n):
     ans += abs(a[i] - b)
 
-print(ans)
+print(ans）
