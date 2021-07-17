@@ -5,7 +5,6 @@ for i in range(1, 20):
     if cnt >= n:
         break
 
-base = 26**(i-1)
 digit = i
 
 
@@ -25,6 +24,8 @@ def binary_search(l, r, x, i):
 res = ""
 for i in range(digit, 0, -1):
     tmp = binary_search(1, 27, n, i)
+    if n % 26 == 0 and tmp != 26:
+        tmp -= 1
     res += chr(ord("a")+tmp-1)
     n -= (tmp)*26**(i-1)
 
