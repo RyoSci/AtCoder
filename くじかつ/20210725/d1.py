@@ -1,6 +1,5 @@
 from collections import deque
-from sys import setrecursionlimit
-setrecursionlimit(10**6)
+
 
 n, m = map(int, input().split())
 a = list(map(int, input().split()))
@@ -11,30 +10,32 @@ for i in range(m):
     g[x].append(y)
 
 
-def dfs(pair, cnt):
-    global res
-    p[pair] = 1
-    for chi in g[pair]:
-        res = max(res, a[chi]-cnt)
-        dfs(chi, min(cnt, a[chi]))
-
-
-def bfs(pair, cnt):
+def bfs(pair):
     global res
     q = deque()
-    q.append([pair, cnt])
+    q.append(pair)
     while len(q) != 0:
-        pair, cnt = q.popleft()
-        p[pair] = 1
+        pair = q.popleft()
+        res = max(res, a[pair]-cnt[pair])
         for chi in g[pair]:
-            res = max(res, a[chi]-cnt)
-            q.append([chi, min(cnt, a[chi])])
+            if p[chi] == 0:
+                p[chi] = 1
+                cnt[chi] = min(cnt[chi], cnt[pair])
+                cnt[chi] = min(cnt[chi], a[pair])
+                # res = max(res, a[chi]-cnt[chi])
+                q.append(chi)
+            else:
+                cnt[chi] = min(cnt[chi], cnt[pair])
+                cnt[chi] = min(cnt[chi], a[pair])
+                # res = max(res, a[chi]-cnt[chi])
 
 
 p = [0]*n
+cnt = [10**18]*n
 res = -10**18
 for i in range(n):
-    if p[i] == 0:
-        bfs(i, a[i])
+    # if p[i] == 0:
+    p[i] = 1
+    bfs(i)
 
 print(res)

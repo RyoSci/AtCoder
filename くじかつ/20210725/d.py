@@ -12,26 +12,28 @@ for i in range(m):
 for i in range(n):
     g[i].sort()
 
-
-def dfs(pair, tmp_cnt):
-    global res
-    for chi in g[pair]:
-        if p[chi] == 0:
-            p[chi] = 1
-            cnt[chi] = min(cnt[chi], tmp_cnt)
-            res = max(res, a[chi]-cnt[chi])
-            dfs(chi, min(cnt[pair], a[chi]))
-        else:
-            cnt[chi] = min(cnt[chi], tmp_cnt)
-            res = max(res, a[chi]-cnt[chi])
+    def dfs(pair):
+        global res
+        res = max(res, a[pair]-cnt[pair])
+        for chi in g[pair]:
+            if p[chi] == 0:
+                p[chi] = 1
+                # res = max(res, a[chi]-cnt[chi])
+                cnt[chi] = min(cnt[chi], cnt[pair])
+                cnt[chi] = min(cnt[chi], a[pair])
+                dfs(chi)
+            else:
+                # res = max(res, a[chi]-cnt[chi])
+                cnt[chi] = min(cnt[chi], cnt[pair])
+                cnt[chi] = min(cnt[chi], a[pair])
 
 
 p = [0]*n
 cnt = [10**18]*n
 res = -10**18
 for i in range(n):
-    if p[i] == 0:
-        p[i] = 1
-        dfs(i, a[i])
+    # if p[i] == 0:
+    p[i] = 1
+    dfs(i)
 
 print(res)
