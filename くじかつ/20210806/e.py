@@ -1,5 +1,12 @@
 h, w = map(int, input().split())
 s = [list(input()) for _ in range(h)]
+# with open("./tmp.txt") as f:
+#     h, w = map(int, f.readline().split())
+#     lines = f.readlines()
+#     s = []
+#     for line in lines:
+#         line = line.replace("\n", "")
+#         s.append(list(line))
 
 p = [[0]*w for _ in range(h)]
 for i in range(h):
@@ -20,7 +27,7 @@ def unite(x, y):
     yi, yj = y
     if find(x) == find(y):
         return
-    p[xi][xj] = find(p[yi][yj])
+    p[find(p[xi][xj])[0]][find(p[xi][xj])[1]] = find(p[yi][yj])
 
 
 for i in range(h):
@@ -28,7 +35,10 @@ for i in range(h):
         if s[i][j] == "#":
             for ii, jj in [[1, 1], [1, -1], [-1, -1], [-1, 1]]:
                 if 0 <= i+ii < h and 0 <= j+jj < w and s[i+ii][j+jj] == "#" and (s[i][j+jj] == "." or s[i+ii][j] == "."):
-                    unite([i, j], [i+ii, j+jj])
+                    unite([i+ii, j+jj], [i, j])
+            for ii, jj in [[-2, 0], [0, 2], [2, 0], [0, -2]]:
+                if 0 <= i+ii < h and 0 <= j+jj < w and s[i+ii][j+jj] == "#" and s[i+ii//2][j+jj//2] == ".":
+                    unite([i+ii, j+jj], [i, j])
 
 d = dict()
 for i in range(h):
@@ -48,5 +58,5 @@ for key, vals in d.items():
                 tmp.add((val[0]+i, val[1]+j))
     res += len(vals)*len(tmp)
 
+
 print(res)
-print(d)
