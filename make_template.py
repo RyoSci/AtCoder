@@ -17,6 +17,10 @@ def main():
         with open(os.path.join(dir_path, f"{i}.py"), "x") as f:
             f.writelines(lines)
 
+    with open(os.path.join(dir_path, "review.md"), "x") as f:
+        for i in "abcde":
+            f.write(i+":\n\n")
+
 
 if __name__ == "__main__":
     main()
