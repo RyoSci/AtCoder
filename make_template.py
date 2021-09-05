@@ -19,6 +19,7 @@ def main():
 
     with open(os.path.join(dir_path, "review.md"), "x") as f:
         for i in "abcde":
+            f.write("- ")
             f.write(i+":\n\n")
 
 
