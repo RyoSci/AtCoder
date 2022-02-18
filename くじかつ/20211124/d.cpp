@@ -1,0 +1,36 @@
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <vector>
+using namespace std;
+#define MOD 1000000007
+#define INF (1 << 29)
+#define EPS (1e-10)
+typedef long long Int;
+typedef pair<Int, Int> P;
+#define max(x, y) ((x) > (y) ? (x) : (y))
+#define min(x, y) ((x) < (y) ? (x) : (y))
+#define rep(i, n) for (int i = 0; i < n; i++)
+#define rep_r(i, k, n) for (int i = k; i > n; i--)
+#define rep_s(i, k, n) for (int i = k; i < n; i++)
+
+int main() {
+    int n, k;
+    cin >> n >> k;
+    string s;
+    cin >> s;
+    int m = 0;
+    rep(i, n - 1) if (s[i] != s[i + 1]) m++;
+
+    int ans;
+    ans = n - 1 - max(0, m - 2 * k);
+    cout << ans << "\n";
+    return 0;
+}

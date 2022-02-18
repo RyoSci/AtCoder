@@ -8,7 +8,7 @@ def main():
 
     lines = [
         "import sys\n",
-        "sys.setrecursionlimit(10**7)\n",
+        "sys.setrecursionlimit(10**6)\n",
         "input = sys.stdin.readline\n",
         "\n"
     ]

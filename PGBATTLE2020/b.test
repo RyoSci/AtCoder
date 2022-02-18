@@ -1,0 +1,57 @@
+in
+1
+0
+0
+
+out
+same
+
+in
+1
+0
+1
+
+out
+B
+
+in
+10**5
+100*n
+100*n
+
+out
+same
+
+in
+3
+2 4 6
+3 5 7
+
+out
+B
+
+in
+3
+1 1 1
+1 1 1
+
+out
+same
+
+in
+3
+1 1 1
+1 1 0
+
+out
+A
+
+in
+3
+1 1 1
+1 1 2
+
+out
+B
+
+15分

@@ -1,4 +1,25 @@
 {
-    "python.pythonPath": "/Users/saekiryou/anaconda3/bin/python",
-    "editor.accessibilityPageSize": 12
+    "editor.accessibilityPageSize": 12,
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "vector": "cpp",
+        "ostream": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "regex": "cpp",
+        "valarray": "cpp",
+        "iostream": "cpp",
+        "iomanip": "cpp",
+        "*.tcc": "cpp"
+    },
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true,
+    "C_Cpp.clang_format_style": "{BasedOnStyle: Google, IndentWidth: 4}"
 }
