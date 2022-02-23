@@ -45,5 +45,6 @@ int main() {
 
     cout << n << ":";
     for (auto aa : a) cout << " " << aa;
+    cout << "\n";
     return 0;
 }
