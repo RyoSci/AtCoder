@@ -7,18 +7,20 @@ def main():
     os.makedirs(dir_path, exist_ok=True)
 
     lines = [
+        "# import pypyjit\n",
+        "# pypyjit.set_param('max_unroll_recursion=-1')\n",
         "import sys\n",
         "sys.setrecursionlimit(10**6)\n",
         "input = sys.stdin.readline\n",
         "\n"
     ]
 
-    for i in "abcde":
+    for i in "abcdef":
         with open(os.path.join(dir_path, f"{i}.py"), "x") as f:
             f.writelines(lines)
 
     with open(os.path.join(dir_path, "review.md"), "x") as f:
-        for i in "abcde":
+        for i in "abcdef":
             f.write("- ")
             f.write(i+":\n\n")
 
