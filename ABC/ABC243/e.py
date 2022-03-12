@@ -7,7 +7,7 @@ input = sys.stdin.readline
 n, m = map(int, input().split())
 
 
-INF = 10*18
+INF = 10**18
 dp = [[INF]*n for _ in range(n)]
 for i in range(n):
     dp[i][i] = 0
