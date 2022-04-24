@@ -129,7 +129,7 @@ int main() {
     ll m = 9;
     // vector<vector<ll>> t2;
 
-    rep(i, 65 * 1e2) {
+    rep(i, 60 * 1e2) {
         // rep(i, n * n) {
         //      ans1[i] = 0; }
 
@@ -151,7 +151,7 @@ int main() {
             ans1 = ans;
         }
 
-        // 乱数を取得して、そのエリアの16マスの回転を全探索
+        // // 乱数を取得して、そのエリアの9マスの回転を全探索
         // rep(j, powl(4, m)) {
         //     rep(k, m) {
         //         ll d = (j >> k & 3);
