@@ -127,17 +127,19 @@ int main() {
     ll res = solve();
 
     ll m = 9;
-    vector<vector<ll>> t2;
+    // vector<vector<ll>> t2;
 
-    rep(i, 5 * 1e3) {
+    rep(i, 65 * 1e2) {
         // rep(i, n * n) {
         //      ans1[i] = 0; }
 
-        // 乱数を取得して、そのエリアの16マスの回転を全探索
-        ll x = rand() % 20 + 5;
-        ll y = rand() % 20 + 5;
-
         // 乱数で回転させる
+        // 中央付近を探索する
+        ll x = rand() % 30;
+        ll y = rand() % 30;
+        // ll x = rand() % 20 + 5;
+        // ll y = rand() % 20 + 5;
+
         // 良かった場合はそのまま、悪くなった場合は元に戻す
         ll d = rand() % 4;
         ans1[x * 30 + y] = d;
@@ -149,6 +151,7 @@ int main() {
             ans1 = ans;
         }
 
+        // 乱数を取得して、そのエリアの16マスの回転を全探索
         // rep(j, powl(4, m)) {
         //     rep(k, m) {
         //         ll d = (j >> k & 3);
