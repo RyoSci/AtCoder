@@ -32,6 +32,8 @@ def dfs(par, root=-1):
         ans += res
     else:
         ans += dfs(chi, par)
+    if len(hist) > 0:
+        hist.pop()
     finished[par] = 1
     return ans
 
