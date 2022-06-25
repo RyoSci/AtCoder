@@ -21,10 +21,10 @@ def main():
             # f.writelines(lines)
             pass
 
-    with open(os.path.join(dir_path, "review.md"), "x") as f:
-        for i in "abcdef":
-            f.write("- ")
-            f.write(i+":\n\n")
+    # with open(os.path.join(dir_path, "review.md"), "x") as f:
+    #     for i in "abcdef":
+    #         f.write("- ")
+    #         f.write(i+":\n\n")
 
 
 if __name__ == "__main__":
