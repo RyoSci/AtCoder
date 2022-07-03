@@ -69,9 +69,12 @@ def ver_vs_hor(p, q):
         now_y += dy
         ans.append((x0, now_y, x1, now_y))
 
+    ans.append((r, r, 0, 0))
+    ans.append((-r, r, 0, 0))
+
     print(len(ans))
     for i in ans:
         print(*i)
 
 
-ver_vs_hor(90, 10)
+ver_vs_hor(90, 8)
