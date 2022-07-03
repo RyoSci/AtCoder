@@ -47,12 +47,12 @@ def same_distance():
 # same_distance()
 
 
-def ver_vs_hor_3_vs_1():
+def ver_vs_hor(p, q):
     """
     等配分
     """
-    dx = 2*r//75
-    dy = 2*r//25
+    dx = 2*r//p
+    dy = 2*r//q
     now_x = -r
     now_y = -r
     y0 = 10**9
@@ -60,12 +60,12 @@ def ver_vs_hor_3_vs_1():
     x0 = 10**9
     x1 = -10**9
     # 経線を引く
-    for i in range(75):
+    for i in range(p):
         now_x += dx
         ans.append((now_x, y0, now_x, y1))
 
     # 緯線を引く
-    for i in range(25):
+    for i in range(q):
         now_y += dy
         ans.append((x0, now_y, x1, now_y))
 
@@ -74,4 +74,4 @@ def ver_vs_hor_3_vs_1():
         print(*i)
 
 
-ver_vs_hor_3_vs_1()
+ver_vs_hor(80, 20)
