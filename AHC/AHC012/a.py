@@ -44,4 +44,34 @@ def same_distance():
         print(*i)
 
 
-same_distance()
+# same_distance()
+
+
+def ver_vs_hor_3_vs_1():
+    """
+    等配分
+    """
+    dx = 2*r//75
+    dy = 2*r//25
+    now_x = -r
+    now_y = -r
+    y0 = 10**9
+    y1 = -10**9
+    x0 = 10**9
+    x1 = -10**9
+    # 経線を引く
+    for i in range(75):
+        now_x += dx
+        ans.append((now_x, y0, now_x, y1))
+
+    # 緯線を引く
+    for i in range(25):
+        now_y += dy
+        ans.append((x0, now_y, x1, now_y))
+
+    print(len(ans))
+    for i in ans:
+        print(*i)
+
+
+ver_vs_hor_3_vs_1()
