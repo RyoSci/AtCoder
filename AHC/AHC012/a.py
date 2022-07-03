@@ -74,4 +74,4 @@ def ver_vs_hor(p, q):
         print(*i)
 
 
-ver_vs_hor(80, 20)
+ver_vs_hor(90, 10)
