@@ -153,40 +153,51 @@ def score():
 
 
 a = list(map(int, input().split()))
-# cnt = [0]*3
+cnt = [0]*3
 
-# for i in range(100):
-#     cnt[a[i]-1] += 1
+for i in range(100):
+    cnt[a[i]-1] += 1
 
-# tmp = []
-# for i in range(3):
-#     tmp.append((cnt[i], i))
+tmp = []
+for i in range(3):
+    tmp.append((cnt[i], i))
 
-# tmp.sort()
-# most = tmp[-1][-1]
+tmp.sort()
+most = tmp[-1][-1]
 
 FRBL = "FRBL"
 
 ans = []
 for i in range(100):
-    pre = deepcopy(board)
     t = int(input())
-    results = []
-    for r in range(4):
-        ni, nj = t//n, t % n
-        board = deepcopy(pre)
-        board[ni][nj] = a[i]
+    pre = deepcopy(board)
+    if a[i] == most+1:
+        move("B")
+        print("B", flush=True)
+        ans.append("B")
+    else:
+
+        results = []
+        for r in range(4):
+            if r in {0, 1}:
+                continue
+            ni, nj = t//n, t % n
+            board = deepcopy(pre)
+            board[ni][nj] = a[i]
+            move(FRBL[r])
+            tmp_score = score()
+            results.append((tmp_score, r))
+
+        results.sort(reverse=True)
+        # print(results)
+        r = results[0][-1]
         move(FRBL[r])
-        tmp_score = score()
-        results.append((tmp_score, r))
+        print(FRBL[r], flush=True)
+        ans.append(FRBL[r])
 
-    results.sort(reverse=True)
-    # print(results)
-    r = results[0][-1]
-    move(FRBL[r])
-    print(FRBL[r], flush=True)
+        # move("L")
+        # print("L", flush=True)
+        # ans.append("L")
 
-#     ans.append(FRBL[r])
-
-# print("AA")
+# print("############")
 # print(*ans, sep="\n")
