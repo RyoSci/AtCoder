@@ -1,6 +1,6 @@
 # import pypyjit
 # pypyjit.set_param('max_unroll_recursion=-1')
-from random import randint
+from copy import deepcopy
 from collections import defaultdict
 import sys
 sys.setrecursionlimit(10**7)
@@ -51,14 +51,6 @@ def move(x):
                     if k != i:
                         board[i][j] = 0
                     k -= 1
-
-
-# board[0][0] = 1
-# board[1][1] = 2
-# print(*board, sep="\n")
-# move("F")
-
-# print(*board, sep="\n")
 
 
 class UnionFind():
@@ -127,7 +119,7 @@ class UnionFind():
 
 
 def score():
-    uf = UnionFind(n*n+n)
+    uf = UnionFind((n-1)*n+n)
     for i in range(n):
         for j in range(n):
             if board[i][j] == 0:
@@ -175,7 +167,26 @@ a = list(map(int, input().split()))
 
 FRBL = "FRBL"
 
+ans = []
 for i in range(100):
-    r = randint(0, 3)
-    print(FRBL[r], flush=True)
+    pre = deepcopy(board)
     t = int(input())
+    results = []
+    for r in range(4):
+        ni, nj = t//n, t % n
+        board = deepcopy(pre)
+        board[ni][nj] = a[i]
+        move(FRBL[r])
+        tmp_score = score()
+        results.append((tmp_score, r))
+
+    results.sort(reverse=True)
+    # print(results)
+    r = results[0][-1]
+    move(FRBL[r])
+    print(FRBL[r], flush=True)
+
+#     ans.append(FRBL[r])
+
+# print("AA")
+# print(*ans, sep="\n")
