@@ -56,70 +56,13 @@ int main() {
     // １日あたりの辺数は kk = m+d-1/d
     ll kk = (m + d - 1) / d;
 
-    // 中心からkk個ずつのグループにしていく
-    // 500,500に近い座標を調べる
-    ll center;
-    center = 0;
-    ll INF = 1000000000;
-    ll tmp = INF;
-    rep(i, n) {
-        ll tmp = (x[i] - 500) * (x[i] - 500) + (y[i] - 500) * (y[i] - 500);
-        if (tmp > tmp) {
-            tmp = tmp;
-            center = i;
-        }
-    }
+    // 出力変数
+    vector<ll> ansr(m, d);
+    double ans = 0.0;
 
-    // 中心からdfs, bfsでエリア分割を試す
-    ll now = 0;
-    vector<vector<ll>> areas(kk + 1);
-    vector<ll> seen(m, 0);
-    ll areaid = 0;
-
-    auto bfs = [&]() {
-        queue<ll> q;
-        q.emplace(center);
-        while (q.size()) {
-            ll u = q.front();
-            q.pop();
-
-            for (auto [v, w, i] : g[u]) {
-                if (seen[i]) continue;
-                seen[i] = 1;
-                now++;
-                if (now == d) {
-                    now = 0;
-                    areaid++;
-                }
-                areas[areaid].emplace_back(i);
-                q.emplace(v);
-            }
-        }
-    };
-
-    bfs();
-
-    // 各エリアの頂点をシャッフルする
-    // 64bit版メルセンヌ・ツイスタ
-    mt19937 get_rand_mt;
-    rep(i, kk + 1) { shuffle(areas[i].begin(), areas[i].end(), get_rand_mt); }
-
-    // d日間各エリアからそれぞれ 1ずつ合計m+d-1/d ずつ取っていく
-    vector<ll> r(m, d);
-
-    rep(i, d + 10) {
-        rep(j, kk) {
-            if (areas[j].size() > i) {
-                r[areas[j][i]] = i + 1;
-            }
-        }
-    }
-
-    // 各点間の最短距離を求めておく
-    vector dis_min(n, vector(n, INF));
-    rep(i, n) dis_min[i][i] = 0;
-
-    vector<set<ll>> stops(d);
+    // i日目に使えない道を管理する
+    // vector<set<ll>> stops(d);
+    vector stops(d, vector(m, false));
 
     // 距離を求める関数
     auto dijkstra = [&](ll day, vector<vector<ll>>& dis) {
@@ -132,7 +75,8 @@ int main() {
                 tmpd *= -1;
                 if (dis[par][node] < tmpd) continue;
                 for (auto [to, w, i] : g[node]) {
-                    if (day != -1 and stops[day].count(i)) continue;
+                    // if (day != -1 and stops[day].count(i)) continue;
+                    if (day != -1 and stops[day][i]) continue;
                     if (dis[par][to] > dis[par][node] + w) {
                         dis[par][to] = dis[par][node] + w;
                         pq.emplace(P(-dis[par][to], to));
@@ -142,75 +86,172 @@ int main() {
         }
     };
 
+    ll INF = 1000000000;
+    // 各点間の最短距離を求めておく
+    vector dis_min(n, vector(n, INF));
+    rep(i, n) dis_min[i][i] = 0;
     dijkstra(-1, dis_min);
 
-    // 各日にちごとに計算する
-    auto f = [&](ll day) {
-        vector dis(n, vector(n, INF));
-        rep(i, n) dis[i][i] = 0;
-        dijkstra(day, dis);
-        double res = 0.0;
-        rep(i, n) rep(j, n) res += dis[i][j] - dis_min[i][j];
-        return res / (n * (n - 1));
-    };
-
-    // スコア関数を作成する
-    auto score = [&]() {
-        // 日にちごとにまとめる
-        // rep(i, d) stops[i].clear();
-        stops.clear();
-        rep(i, m) stops[r[i] - 1].insert(i);
-        double res = 0.0;
-        rep(day, d) { res += f(day); }
-        return round(1000.0 * res / d);
-    };
-
-    double current_score = score();
-    // 小数点以下の長さを指定
-    cout << fixed << setprecision(15) << current_score << endl;
-    clock_t end = clock();
-    const double time =
-        static_cast<double>(end - start) / CLOCKS_PER_SEC * 1.0;  // sec
-    // 小数点以下の長さを指定
-    cout << fixed << setprecision(15) << time << endl;
-    // 焼きなましを実施していく
-    while (1) {
+    // 時間になったら出る関数
+    auto timer = [&]() {
         clock_t end = clock();
         const double time =
             static_cast<double>(end - start) / CLOCKS_PER_SEC * 1.0;  // sec
-        // 時間になったら出る
-        if (time > 5.8) break;
+        if (time > 5.0)
+            return true;
+        else
+            return false;
+    };
 
-        // 乱数生成
-        ll i, j;
-        i = rand() % m;
-        j = rand() % m * rand() % m;
-        j %= m;
-        // スワップする
-        swap(r[i], r[j]);
-
-        // socreを計算する
-        double now_score = score();
-        // // 温度を設定する
-        double T = 30.0 - 28.0 * time / 6.0;
-        double p = exp(min(0.0, current_score - now_score) / T);
-        // 小数点以下の長さを指定
-        cout << fixed << setprecision(15) << p << endl;
-        if (Randouble() < p) {
-            current_score = now_score;
-        } else
-            swap(r[i], r[j]);
-
-        // // 山登り
-        // if (now_score > current_score) {
-        //     current_score = now_score;
-        // } else
-        //     swap(r[i], r[j]);
+    // 中心からkk個ずつのグループにしていく
+    // 500,500に近い座標を調べる
+    ll center;
+    center = 0;
+    ll distmp = INF;
+    rep(i, n) {
+        ll tmp = (x[i] - 500) * (x[i] - 500) + (y[i] - 500) * (y[i] - 500);
+        if (distmp > tmp) {
+            distmp = tmp;
+            center = i;
+        }
     }
 
-    for (auto a : r) cout << a << " ";
+    // 中心からdfs, bfsでエリア分割を試す
+    rep(i, 2) {
+        ll now = 0;
+        vector<vector<ll>> areas(kk + 1);
+        vector<ll> seen(m, 0);
+        ll areaid = 0;
+
+        auto bfs = [&]() {
+            queue<ll> q;
+            q.emplace(center);
+            while (q.size()) {
+                ll u = q.front();
+                q.pop();
+
+                for (auto [v, w, i] : g[u]) {
+                    if (seen[i]) continue;
+                    seen[i] = 1;
+                    now++;
+                    if (now == d) {
+                        now = 0;
+                        areaid++;
+                    }
+                    areas[areaid].emplace_back(i);
+                    q.emplace(v);
+                }
+            }
+        };
+
+        auto dfs = [&](auto dfs, ll u) -> void {
+            for (auto [v, w, i] : g[u]) {
+                if (seen[i]) continue;
+                seen[i] = 1;
+                now++;
+                if (now == d) {
+                    now = 0;
+                    areaid++;
+                }
+                areas[areaid].emplace_back(i);
+                dfs(dfs, v);
+            }
+        };
+
+        if (i % 2)
+            bfs();
+        else
+            dfs(dfs, 0);
+
+        // 各エリアの頂点をシャッフルする
+        mt19937 get_rand_mt;
+        rep(i, kk + 1) {
+            shuffle(areas[i].begin(), areas[i].end(), get_rand_mt);
+        }
+
+        // d日間各エリアからそれぞれ 1ずつ合計m+d-1/d ずつ取っていく
+        vector<ll> r(m, d);
+        rep(i, d + 10) {
+            rep(j, kk) {
+                if (areas[j].size() > i) {
+                    r[areas[j][i]] = i + 1;
+                }
+            }
+        }
+
+        if (i % 2 == 0) ansr = r;
+
+        // 各日にちごとに計算する
+        auto f = [&](ll day) {
+            vector dis(n, vector(n, INF));
+            rep(i, n) dis[i][i] = 0;
+            dijkstra(day, dis);
+            double res = 0.0;
+            rep(i, n) rep(j, n) res += dis[i][j] - dis_min[i][j];
+            return res / (n * (n - 1));
+        };
+
+        // スコア関数を作成する
+        auto score = [&]() {
+            // 通行止め管理
+            // stops.clear();
+            // rep(i, m) stops[r[i] - 1].insert(i);
+            rep(i, d) rep(j, m) stops[i][j] = false;
+            rep(i, m) stops[r[i] - 1][i] = true;
+
+            // 日にちごとにまとめる
+            double res = 0.0;
+            rep(day, d) {
+                res += f(day);
+                if (timer()) break;
+            }
+            return round(1000.0 * res / d);
+        };
+
+        if (timer()) break;
+
+        double current_score = score();
+        if (timer()) break;
+
+        if (ans < current_score) {
+            ansr = r;
+            ans = current_score;
+        }
+
+        if (timer()) break;
+
+        //     // 焼きなましを実施していく
+        //     while (1) {
+        //         if(timer()) break;
+        //         // 乱数生成
+        //         ll i, j;
+        //         i = rand() % m;
+        //         j = rand() % m * rand() % m;
+        //         j %= m;
+        //         // スワップする
+        //         swap(r[i], r[j]);
+
+        //         // socreを計算する
+        //         double now_score = score();
+        //         // // 温度を設定する
+        //         double T = 30.0 - 28.0 * time / 6.0;
+        //         double p = exp(min(0.0, current_score - now_score) / T);
+        //         // 小数点以下の長さを指定
+        //         cout << fixed << setprecision(15) << p << endl;
+        //         if (Randouble() < p) {
+        //             current_score = now_score;
+        //         } else
+        //             swap(r[i], r[j]);
+
+        //         // // 山登り
+        //         // if (now_score > current_score) {
+        //         //     current_score = now_score;
+        //         // } else
+        //         //     swap(r[i], r[j]);
+        //     }
+    }
+
+    for (auto a : ansr) cout << a << " ";
     cout << endl;
-    // 小数点以下の長さを指定
-    cout << fixed << setprecision(15) << current_score << endl;
     return 0;
 }
