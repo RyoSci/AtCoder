@@ -1,0 +1,58 @@
+// #define _GLIBCXX_DEBUG
+#include <algorithm>
+#include <atcoder/all>
+#include <atcoder/modint>
+#include <cmath>
+#include <cstdio>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <vector>
+using namespace std;
+using namespace atcoder;
+using lli = long long;
+using mint = modint1000000007;
+// using mint = modint998244353;
+#define MOD 1000000007
+#define INF (1L << 60)
+#define EPS (1e-10)
+typedef long long ll;
+typedef pair<ll, ll> P;
+typedef tuple<ll, ll, ll> T;
+#define max(x, y) ((x) > (y) ? (x) : (y))
+#define min(x, y) ((x) < (y) ? (x) : (y))
+#define rep(i, n) for (ll i = 0; i < n; i++)
+#define rep_r(i, k, n) for (ll i = k; i > n; i--)
+#define rep_s(i, k, n) for (ll i = k; i < n; i++)
+#define rep_e(e, s) for (auto e : s)
+
+int main() {
+    ll n;
+    cin >> n;
+    string s;
+    cin >> s;
+    string t = "atcoder";
+    ll m = t.length();
+    vector<vector<mint>> dp(m + 1, vector<mint>(n + 1, 0));
+    rep(i, n + 1) dp[0][i] = 1;
+    rep_s(i, 1, m + 1) {
+        rep_s(j, 1, n + 1) {
+            // 使わない
+            dp[i][j] += dp[i][j - 1];
+            // 使って一致した場合
+            if (t[i - 1] == s[j - 1]) dp[i][j] += dp[i - 1][j - 1];
+        }
+    }
+
+    cout << dp[m][n].val() << "\n";
+
+    // rep(i, m + 1) {
+    //     for (auto a : dp[i]) cout << a.val() << " ";
+    //     cout << endl;
+    // }
+    return 0;
+}

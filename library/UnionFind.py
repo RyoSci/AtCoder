@@ -6,7 +6,7 @@ class UnionFind():
         self.n = n
         self.parents = [-1] * n
 
-        # 各要素も持つ場合
+        # 代表源ごとに所属する各要素も持つ場合
         self.group = [[i] for i in range(n)]
 
     def find(self, x):
@@ -29,7 +29,7 @@ class UnionFind():
         self.parents[x] += self.parents[y]
         self.parents[y] = x
 
-        # 各要素も持つ場合
+        # 代表源ごとに所属する各要素も持つ場合
         self.group[x] += self.group[y]
         self.group[y] = []
 
@@ -45,7 +45,8 @@ class UnionFind():
 
     def members2(self, x):
         """
-        各要素も持つ場合
+        代表源ごとに所属する各要素も持つ場合
+        所属する要素を数えるのにmembers関数より早い
         """
         root = self.find(x)
         return self.group[root]

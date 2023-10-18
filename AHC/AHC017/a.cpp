@@ -46,9 +46,13 @@ int main() {
         cin >> u >> v >> w;
         u--;
         v--;
-        g[u].emplace_back(T(v, w, i));
-        g[v].emplace_back(T(u, w, i));
+        g[u].emplace_back(T(w, v, i));
+        g[v].emplace_back(T(w, u, i));
     }
+
+    // 距離が近い順に並び替える
+    rep(i, n) { sort(g[i].begin(), g[i].end()); }
+
     vector<ll> x(n), y(n);
     rep(i, n) cin >> x[i] >> y[i];
 
@@ -58,7 +62,7 @@ int main() {
 
     // 出力変数
     vector<ll> ansr(m, d);
-    double ans = 0.0;
+    double ans = 1e18;
 
     // i日目に使えない道を管理する
     // vector<set<ll>> stops(d);
@@ -74,7 +78,7 @@ int main() {
                 pq.pop();
                 tmpd *= -1;
                 if (dis[par][node] < tmpd) continue;
-                for (auto [to, w, i] : g[node]) {
+                for (auto [w, to, i] : g[node]) {
                     // if (day != -1 and stops[day].count(i)) continue;
                     if (day != -1 and stops[day][i]) continue;
                     if (dis[par][to] > dis[par][node] + w) {
@@ -104,12 +108,13 @@ int main() {
     };
 
     // 中心からkk個ずつのグループにしていく
-    // 500,500に近い座標を調べる
+    // 500,500に近い座標を調べる->dfsの方がスコアが良かったことから中央付近の点は分散した方が良いのでは？0,0でも試す
     ll center;
     center = 0;
     ll distmp = INF;
     rep(i, n) {
-        ll tmp = (x[i] - 500) * (x[i] - 500) + (y[i] - 500) * (y[i] - 500);
+        ll tmp = (x[i] - 0) * (x[i] - 0) + (y[i] - 0) * (y[i] - 0);
+        // ll tmp = (x[i] - 500) * (x[i] - 500) + (y[i] - 500) * (y[i] - 500);
         if (distmp > tmp) {
             distmp = tmp;
             center = i;
@@ -130,7 +135,7 @@ int main() {
                 ll u = q.front();
                 q.pop();
 
-                for (auto [v, w, i] : g[u]) {
+                for (auto [w, v, i] : g[u]) {
                     if (seen[i]) continue;
                     seen[i] = 1;
                     now++;
@@ -145,7 +150,7 @@ int main() {
         };
 
         auto dfs = [&](auto dfs, ll u) -> void {
-            for (auto [v, w, i] : g[u]) {
+            for (auto [w, v, i] : g[u]) {
                 if (seen[i]) continue;
                 seen[i] = 1;
                 now++;
@@ -159,15 +164,15 @@ int main() {
         };
 
         if (i % 2)
-            bfs();
-        else
             dfs(dfs, 0);
+        else
+            bfs();
 
-        // 各エリアの頂点をシャッフルする
-        mt19937 get_rand_mt;
-        rep(i, kk + 1) {
-            shuffle(areas[i].begin(), areas[i].end(), get_rand_mt);
-        }
+        // // 各エリアの頂点をシャッフルする
+        // mt19937 get_rand_mt;
+        // rep(i, kk + 1) {
+        //     shuffle(areas[i].begin(), areas[i].end(), get_rand_mt);
+        // }
 
         // d日間各エリアからそれぞれ 1ずつ合計m+d-1/d ずつ取っていく
         vector<ll> r(m, d);
@@ -185,7 +190,9 @@ int main() {
         auto f = [&](ll day) {
             vector dis(n, vector(n, INF));
             rep(i, n) dis[i][i] = 0;
+            if (timer()) return 0.0;
             dijkstra(day, dis);
+            if (timer()) return 0.0;
             double res = 0.0;
             rep(i, n) rep(j, n) res += dis[i][j] - dis_min[i][j];
             return res / (n * (n - 1));
@@ -213,7 +220,11 @@ int main() {
         double current_score = score();
         if (timer()) break;
 
-        if (ans < current_score) {
+        // // 小数点以下の長さを指定
+        // cout << fixed << setprecision(15) << ans << endl;
+        // cout << fixed << setprecision(15) << current_score << endl;
+
+        if (ans > current_score) {
             ansr = r;
             ans = current_score;
         }

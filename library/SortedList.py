@@ -9,9 +9,6 @@ from bisect import bisect_left, bisect_right, insort
 import traceback
 # from __future__ import print_function
 from bisect import bisect_left, bisect_right
-import sys
-sys.setrecursionlimit(10**7)
-input = sys.stdin.readline
 
 
 # SortedListは下記を使用

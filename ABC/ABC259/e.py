@@ -10,7 +10,7 @@ INF = 10**18
 
 n = int(input())
 
-d = dict()
+p_e_cnt = dict()
 
 pe = []
 
@@ -20,42 +20,40 @@ for i in range(n):
     for j in range(m):
         p, e = map(int, input().split())
         tmp.append((p, e))
-        if (p, e) not in d:
-            d[(p, e)] = 0
-        d[(p, e)] += 1
+        if (p, e) not in p_e_cnt:
+            p_e_cnt[(p, e)] = 0
+        p_e_cnt[(p, e)] += 1
     pe.append(tmp)
 
-# print(d)
-p_es = dict()
-for key, val in d.items():
+# print(p_e_cnt)
+p_dict_es_list = dict()
+for key, val in p_e_cnt.items():
     p, e = key
-    if p not in p_es:
-        p_es[p] = [0]
-    p_es[p].append(e)
+    if p not in p_dict_es_list:
+        p_dict_es_list[p] = [0]
+    p_dict_es_list[p].append(e)
 
 ans = set()
 
-tot = []
-for key in p_es.keys():
-    p_es[key].sort()
-    tot.append(p_es[key][-1])
+for key in p_dict_es_list.keys():
+    p_dict_es_list[key].sort()
 
-# print(p_es)
+# print(p_dict_es_list)
 
 # print(pe)
 
 for i in range(n):
     tmp = []
     for p, e in pe[i]:
-        index = bisect_left(p_es[p], e)
-        if index == len(p_es[p])-1:
-            if d[(p, e)] > 1:
+        index = bisect_left(p_dict_es_list[p], e)
+        if index == len(p_dict_es_list[p])-1:
+            if p_e_cnt[(p, e)] > 1:
                 # tmp.append((p, e))
                 continue
             else:
-                tmp.append((p, p_es[p][index-1]))
+                tmp.append((p, p_dict_es_list[p][index-1]))
         else:
-            # tmp.append((p, p_es[p][-1]))
+            # tmp.append((p, p_dict_es_list[p][-1]))
             continue
     tmp.sort()
     ans.add(tuple(tmp))

@@ -1,120 +1,79 @@
-// #include <algorithm>
-// #include <cmath>
-// #include <cstdio>
-// #include <iomanip>
-// #include <iostream>
-// #include <map>
-// #include <queue>
-// #include <set>
-// #include <stack>
-// #include <string>
-// #include <vector>
-// using namespace std;
-// #define MOD 1000000007
-// #define INF (1 << 29)
-// #define EPS (1e-10)
-// typedef long long ll;
-// typedef pair<ll, ll> P;
-// #define max(x, y) ((x) > (y) ? (x) : (y))
-// #define min(x, y) ((x) < (y) ? (x) : (y))
-// #define rep(i, n) for (ll i = 0; i < n; i++)
-// #define rep_r(i, k, n) for (ll i = k; i > n; i--)
-// #define rep_s(i, k, n) for (ll i = k; i < n; i++)
-// #define rep_e(c, s) for (auto c : s)
-// // #include <atcoder/all>
-// // #include <atcoder/modint>
-// // using namespace atcoder;
-// // using lli = long long;
-// // using mint = modint1000000007;
-// // using mint = modint998244353;
-
-// ll gcd(ll a, ll b) {
-//     if (b == 0) return a;
-//     return gcd(b, a % b);
-// }
-
-// ll lcm(ll a, ll b) { return a * b / gcd(a, b); }
-
-// int main() {
-//     ll n, m;
-//     cin >> n >> m;
-//     vector<ll> a(n);
-//     for (ll i = 0; i < n; i++) {
-//         cin >> a[i];
-//         a[i] /= 2;
-//     }
-//     ll ans = 0;
-//     rep_s(x, 1, m + 1) {
-//         bool flag = true;
-//         rep(i, n) {
-//             if (x % a[i] == 0) {
-//                 ll p2 = x / a[i] - 1;
-//                 if (p2 % 2 == 0 && 0 <= p2 / 2)
-//                     continue;
-//                 else
-//                     flag = false;
-//             } else
-//                 flag = false;
-//         }
-//         if (flag) ans++;
-//     }
-//     cout << ans << "\n";
-//     return 0;
-// }
 #include <bits/stdc++.h>
-#define rep(i, n) for (int i = 0; i < (n); ++i)
+
+#pragma GCC optimize(3, "Ofast", "inline")
+#define ull unsigned long long
+#define int long long
+#define ll long long
+#define ld long double
+#define pii pair<ll, ll>
+#define endl '\n'
+#define x first
+#define y second
+
 using namespace std;
-typedef long long ll;
 
-ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
-ll lcm(ll a, ll b) { return a / gcd(a, b) * b; }
+const ld eps = 1e-6;
+const int N = 100010, M = 100010, inf = 1e9, mod = 998244353;
 
-int f(int x) {
-    int res = 0;
-    while (x % 2 == 0) {
-        x /= 2;
-        res++;
+int n, m, k;
+int a[N], cnt[N], f[N];
+vector<int> g[N];
+map<pii, int> ma;
+
+bool dfs(int u, int fa, int goal) {
+    if (u == goal) return true;
+    for (int v : g[u]) {
+        if (v == fa) continue;
+        if (dfs(v, u, goal)) {
+            cnt[ma[{u, v}]]++;
+            return true;
+        }
     }
-    return res;
+    return false;
 }
 
-int main() {
-    int n, m;
-    cin >> n >> m;
-    vector<int> a(n);
-    rep(i, n) cin >> a[i];
-
-    // a -> a'
-    rep(i, n) {
-        if (a[i] % 2 == 1) {
-            cout << 0 << endl;
-            return 0;
-        }
-        a[i] /= 2;
+void solve() {
+    cin >> n >> m >> k;
+    k = abs(k);
+    for (int i = 1; i <= m; i++) {
+        cin >> a[i];
+    }
+    for (int i = 1; i < n; i++) {
+        int a, b;
+        cin >> a >> b;
+        g[a].push_back(b);
+        g[b].push_back(a);
+        ma[{a, b}] = ma[{b, a}] = i;
     }
 
-    // a' -> a''
-    int t = f(a[0]);
-    rep(i, n) {
-        if (f(a[i]) != t) {
-            cout << 0 << endl;
-            return 0;
-        }
-        a[i] >>= t;  // a[i] /= 2^t
-    }
-    m >>= t;
-
-    ll l = 1;
-    rep(i, n) {
-        l = lcm(l, a[i]);
-        if (l > m) {
-            cout << 0 << endl;
-            return 0;
-        }
+    for (int i = 2; i <= m; i++) {
+        dfs(a[i - 1], 0, a[i]);
     }
 
-    m /= l;
-    int ans = (m + 1) / 2;
-    cout << ans << endl;
+    int sum = 0;
+    for (int i = 1; i < n; i++) {
+        sum += cnt[i];
+    }
+
+    f[sum] = 1;
+    for (int i = 1; i < n; i++) {
+        for (int j = 0; j <= sum; j++) {
+            if (j + 2 * cnt[i] > sum) break;
+            f[j] += f[j + 2 * cnt[i]];
+            f[j] %= mod;
+        }
+    }
+    cout << f[k] << endl;
+}
+
+signed main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+
+    int t = 1;
+    // cin>>t;
+    while (t--) solve();
+
     return 0;
 }

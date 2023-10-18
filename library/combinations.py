@@ -34,7 +34,7 @@ for i in range(1, n+1):
 invfact[n] = pow(fact[n], MOD-2, MOD)
 for i in range(n, 0, -1):
     invfact[i-1] = invfact[i]*i
-    invfact[i] %= MOD
+    invfact[i-1] %= MOD
 
 
 def nCk(n, k):

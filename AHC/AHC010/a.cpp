@@ -129,7 +129,7 @@ int main() {
     ll m = 9;
     // vector<vector<ll>> t2;
 
-    rep(i, 60 * 1e2) {
+    rep(i, 50 * 1e2) {
         // rep(i, n * n) {
         //      ans1[i] = 0; }
 

@@ -2,6 +2,7 @@
 # pypyjit.set_param('max_unroll_recursion=-1')
 from copy import deepcopy
 from collections import defaultdict
+from random import randint
 import sys
 sys.setrecursionlimit(10**7)
 def input(): return sys.stdin.readline().rstrip()
@@ -152,6 +153,17 @@ def score():
     return res
 
 
+def serch(i, j, r):
+    di = [-1, 0, 1, 0][r]
+    dj = [0, 1, 0, -1][r]
+    oi, oj = i, j
+    while 0 <= i+di < n and 0 <= j+dj < n and board[i+di][j+dj] != 0:
+        i += di
+        j += dj
+
+    return board[oi][oj] == board[i][j]
+
+
 a = list(map(int, input().split()))
 cnt = [0]*3
 
@@ -178,19 +190,32 @@ for i in range(100):
     else:
 
         results = []
-        for r in range(4):
+        is_finished = False
+        for r in range(3, -1, -1):
             if r in {0, 1}:
                 continue
             ni, nj = t//n, t % n
             board = deepcopy(pre)
             board[ni][nj] = a[i]
-            move(FRBL[r])
+            # if serch(ni, nj, r):
+            #     move(FRBL[r])
+            #     is_finished = False
+            #     print(FRBL[r], flush=True)
+            #     ans.append(FRBL[r])
+            #     break
             tmp_score = score()
-            results.append((tmp_score, r))
+            results.append((tmp_score, -r))
+        # if not is_finished:
+        #     move("L")
+        #     print("L", flush=True)
+        #     ans.append("L")
 
         results.sort(reverse=True)
-        # print(results)
-        r = results[0][-1]
+        tmp = randint(0, 100)
+        if tmp >= 80:
+            r = -results[1][-1]
+        else:
+            r = -results[0][-1]
         move(FRBL[r])
         print(FRBL[r], flush=True)
         ans.append(FRBL[r])

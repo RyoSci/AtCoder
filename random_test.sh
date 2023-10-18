@@ -14,5 +14,4 @@ while true; do
         echo "----------------------------------------"
         break
     fi
-    # echo AAA
 done
